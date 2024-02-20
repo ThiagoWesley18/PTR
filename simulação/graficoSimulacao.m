@@ -1,7 +1,7 @@
 clc,clear,close all
 
 % Abre o arquivo 'teste.txt' para leitura
-fileID = fopen('teste.txt','r');
+fileID = fopen('resultado.txt','r');
 
 % Define o formato dos dados
 formatSpec = '%f [%f %f] [%f %f %f]';
@@ -24,9 +24,11 @@ y2 = dados(:,5);
 y3 = dados(:,6);
 
 y = [y1 y2 y3];
+u = [u1, u2];
 
 % Plota os dados
-plot(t, y);
+plot(t,y);
+%plot(t,u);
 hold on;
 grid on;
 legend('t','y');

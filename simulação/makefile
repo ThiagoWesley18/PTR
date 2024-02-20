@@ -9,7 +9,6 @@ EXEC = program
 # Regra padrão
 all: $(EXEC)
 
-
 # Regra para o arquivo objeto
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
