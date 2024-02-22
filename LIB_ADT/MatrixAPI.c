@@ -394,10 +394,7 @@ void freeMatrix(Matrix matrix, ...){
                 currentMatrix.matriz[i] = NULL; // Defina como NULL após liberar
             }
         }
-        if(currentMatrix.matriz != NULL){
-            free(currentMatrix.matriz);
-            currentMatrix.matriz = NULL; // Defina como NULL após liberar
-        }
+        
         currentMatrix = va_arg(args, Matrix);
     }
     va_end(args);

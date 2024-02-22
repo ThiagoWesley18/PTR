@@ -1,7 +1,7 @@
 # Variáveis
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c17 
-DEPS = ../LIB_ADT/*.h .*h
+DEPS = ../LIB_ADT/*.h *.h
 SRC = $(wildcard *.c ../LIB_ADT/*.c)
 OBJ = $(SRC:.c=.o)
 EXEC = program

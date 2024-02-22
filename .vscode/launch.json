@@ -7,9 +7,9 @@
       "request": "launch",
       "args": [],
       "stopAtEntry": false,
-      "externalConsole": true,
-      "cwd": "d:/PTR",
-      "program": "d:/PTR/build/Debug/outDebug",
+      "externalConsole": false,
+      "cwd": "/home/thiago/Documentos/PTR/simulação",
+      "program": "/home/thiago/Documentos/PTR/simulação/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [
