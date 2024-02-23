@@ -1,6 +1,6 @@
 # Variáveis
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c17 
+CFLAGS = -Wall -Wextra -std=c17 -D _POSIX_C_SOURCE=199309L
 DEPS = ../LIB_ADT/*.h *.h
 SRC = $(wildcard *.c ../LIB_ADT/*.c)
 OBJ = $(SRC:.c=.o)
