@@ -2,13 +2,16 @@
 #include <stdlib.h>
 #include <math.h>
 #include <pthread.h>
-#include <unistd.h>
+#include <semaphore.h>
 #include "simulacaoLib.h"
-#define intervalo 0.1
+#define intervalo 0.01
+#define tempo_inicio 0.00
 #define tempo 20.0
 #define D 1.0
 
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+sem_t sem_produtor;
+sem_t sem_consumidor;
 
 // Variaveis globais
 Matrix matriz_estado_B;
@@ -17,34 +20,48 @@ Matrix matriz_estado_X;
 Matrix matriz_entrada;
 
 void* thread_Produtora(void*){
-    for(double t = 0.0; t <= tempo; t+=intervalo){
+    for(double t = tempo_inicio; t <= tempo; t+=intervalo){
+        
+        // Verifica se pode produzir, se pode, decrementa o semáforo e faz o lock dos recursos
+        sem_wait(&sem_produtor);
         pthread_mutex_lock(&lock);
-        Array v = calcula_sinal_de_entrada(t);
 
+        Array v = calcula_sinal_de_entrada(t); 
         matriz_entrada.matriz[0][0] = v.in[0];
         matriz_entrada.matriz[1][0] = v.in[1];
+        matriz_estado_X = calcula_proximo_estado(matriz_estado_B, matriz_entrada);
+        atualiza_matriz_B(matriz_estado_B, matriz_estado_X);
+    
+        // Libera o lock e incrementa o semáforo consumidor para indicar que o recurso está disponível
         pthread_mutex_unlock(&lock);
+        sem_post(&sem_consumidor);
 
-        espera_thread(30);
+        espera_thread(1);
     }
     return NULL;
 }
 void* thread_Consumidora(void*){
     Matrix y = newMatrix(3, 1);
-    for(double t = 0.0; t <= tempo; t+=intervalo){
+    for(double t = tempo_inicio; t <= tempo; t+=intervalo){
+        // trava a thread até que o semáforo consumidor seja liberado pelo sem_post do produtor
+        sem_wait(&sem_consumidor);
         pthread_mutex_lock(&lock);
-        matriz_estado_X = calcula_proximo_estado(matriz_estado_B, matriz_entrada);
-        atualiza_matriz_B(matriz_estado_B, matriz_estado_X);
+
         y = calcula_sinal_de_saida(matriz_estado_C, matriz_estado_X);
         imprimi_resultado(t, matriz_entrada, y);
-        pthread_mutex_unlock(&lock);
 
-        espera_thread(50);
+        // Libera o lock e incrementa o semáforo produtor para liberar o recurso
+        pthread_mutex_unlock(&lock);
+        sem_post(&sem_produtor);
+        espera_thread(2);
     }
     return NULL;
 }
 
 void inicializa_Matriz(){
+    sem_init(&sem_produtor, 0, 5);
+    sem_init(&sem_consumidor, 0, 0);
+
     matriz_estado_X= newMatrix(3, 1);
     matriz_estado_B = newMatrix(3, 2);
     matriz_estado_C = newMatrix(3, 3);
@@ -88,7 +105,10 @@ int main(){
     pthread_join(t1, NULL);
     pthread_join(t2, NULL);
 
-    freeMatrix(matriz_estado_B, matriz_estado_C, matriz_estado_X, matriz_entrada, NULL);
+    sem_destroy(&sem_produtor);
+    sem_destroy(&sem_consumidor);
+
+    //freeMatrix(matriz_estado_B, matriz_estado_C, matriz_estado_X, matriz_entrada, NULL);
 
     return 0;
 }
