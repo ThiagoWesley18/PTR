@@ -50,7 +50,7 @@ void espera_thread(int milisegundos){
 
 // Imprime o resultado da simulação
 void imprimi_resultado(double t, Matrix matriz_entrada, Matrix y) {
-    /*static int first_call = 1;
+    static int first_call = 1;
     
     // Abrir o arquivo no modo de escrita na primeira chamada para apagar o conteúdo existente
     // Abrir o arquivo no modo de anexação nas chamadas subsequentes para adicionar novos dados
@@ -66,6 +66,4 @@ void imprimi_resultado(double t, Matrix matriz_entrada, Matrix y) {
 
     // Resetar a flag first_call para que o arquivo seja aberto no modo de anexação nas chamadas subsequentes
     first_call = 0; 
-    */
-    printf("%lf    [%lf    %lf]    [%lf    %lf    %lf]\n", t, matriz_entrada.matriz[0][0], matriz_entrada.matriz[1][0], y.matriz[0][0], y.matriz[1][0], y.matriz[2][0]);
 }
