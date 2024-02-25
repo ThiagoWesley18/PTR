@@ -7,29 +7,13 @@ typedef struct array {
     double in[2];
 }Array;
 
-typedef struct{
-    double t;
-    Matrix B;
-    Matrix u;
-    Matrix Estado;
-}args_th1;
-
-typedef struct{
-    Matrix C;
-    Matrix Estado;
-    double t;
-    Matrix u;
-    Matrix y;
-}args_th2;
-
-extern pthread_mutex_t lock; // Define the "lock" identifier
-
-Matrix estado(Matrix B, Matrix u);
-Matrix saida(Matrix C, Matrix x);
-Array entrada(double t);
-void resultado(double t, Matrix u, Matrix y);
-Matrix simula(Matrix B, Matrix u, Array v);
-void* thread_1(void* agr);
-void* thread_2(void* agr);
+Matrix calcula_proximo_estado(Matrix matriz_estado_B, Matrix u);
+Matrix calcula_sinal_de_saida(Matrix matriz_estado_C, Matrix matriz_estado_X);
+Array calcula_sinal_de_entrada(double t);
+void espera_thread(int milisegundos);
+void imprimi_resultado(double t, Matrix u, Matrix y);
+void atualiza_matriz_B(Matrix matriz_estado_B, Matrix matriz_estado_X);
+void* thread_Produtora(void* agr);
+void* thread_Consumidora(void* agr);
 
 #endif
