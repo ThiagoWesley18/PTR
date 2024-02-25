@@ -4,7 +4,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include "simulacaoLib.h"
-#define intervalo 0.1
+#define intervalo 0.01
 #define tempo_inicio 0.0
 #define tempo 20.0
 #define D 1.0
@@ -20,6 +20,7 @@ Matrix matriz_estado_X;
 Matrix matriz_u;
 
 void* thread_Produtora(void* arg){
+    (void)arg;
     for(double t = tempo_inicio; t <= tempo; t+=intervalo){
         
         // Verifica se pode produzir, se pode, decrementa o semáforo e faz o lock dos recursos
@@ -40,6 +41,7 @@ void* thread_Produtora(void* arg){
     return NULL;
 }
 void* thread_Consumidora(void*  arg){
+    (void)arg;
     Matrix y = newMatrix(3, 1);
     for(double t = tempo_inicio; t <= tempo; t+=intervalo){
         // trava a thread até que o semáforo consumidor seja liberado pelo sem_post do produtor
@@ -67,7 +69,6 @@ void inicializa_Matriz(){
     matriz_estado_C = newMatrix(3, 3);
 
     matriz_u = newMatrix(2, 1);
-   
 
     matriz_estado_X.matriz[0][0] = 0;
     matriz_estado_X.matriz[1][0] = 0;
@@ -89,8 +90,7 @@ void inicializa_Matriz(){
     matriz_estado_C.matriz[1][2] = 0;
     matriz_estado_C.matriz[2][0] = 0;
     matriz_estado_C.matriz[2][1] = 0;
-    matriz_estado_C.matriz[2][2] = 1;
-    
+    matriz_estado_C.matriz[2][2] = 1;  
 }
 
 int main(){
