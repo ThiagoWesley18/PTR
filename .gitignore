@@ -3,5 +3,5 @@ program
 *.exe
 *.o
 makefile
-build/
+
 ```
