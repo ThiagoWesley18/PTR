@@ -11,12 +11,12 @@ all: $(EXEC)
 
 # Regra para o arquivo objeto
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS) -fno-stack-protector
 
 # Regra para o executável
 $(EXEC): $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) -lm
+	$(CC) -o $@ $^ $(CFLAGS) -fno-stack-protector -lm
 
 # Regra para limpar os arquivos gerados
 clean:
-	rm -f $(OBJ) $(EXEC)
+	del /f mainRobo.o simulacaoAPI.o ..\LIB_ADT\DstringAPI.o ..\LIB_ADT\IntegralAPI.o ..\LIB_ADT\MatrixAPI.o program

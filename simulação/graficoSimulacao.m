@@ -23,19 +23,16 @@ y1 = dados(:,4);
 y2 = dados(:,5);
 y3 = dados(:,6);
 
-y = [y1 y2 y3];
-u = [u1, u2];
+
+
 
 % Plota os dados
-plot(t,y);
-%plot(t,u);
+plot(y1, y2);
 hold on;
 grid on;
-legend('t','y');
+title("Saida Yc");
 
-% Definir os limites dos eixos x e y
-axis([-1 21 -1 1]);
 
 % Adicionar legendas aos eixos
-xlabel('Tempo (s)');
-ylabel('Trajetoria');
+xlabel('Xc');
+ylabel('Yc');

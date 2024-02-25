@@ -9,8 +9,8 @@
 
 
 // Calcula o estado seguinte do robô
-Matrix calcula_proximo_estado(Matrix matriz_estado_B, Matrix matriz_entrada){
-    return multMatrix(matriz_estado_B, matriz_entrada);
+Matrix calcula_proximo_estado(Matrix matriz_estado_B, Matrix matriz_u){
+    return multMatrix(matriz_estado_B, matriz_u);
 }
 
 // Calcula a saída do robô
@@ -49,7 +49,7 @@ void espera_thread(int milisegundos){
 }
 
 // Imprime o resultado da simulação
-void imprimi_resultado(double t, Matrix matriz_entrada, Matrix y) {
+void imprimi_resultado(double t, Matrix matriz_u, Matrix y) {
     static int first_call = 1;
     
     // Abrir o arquivo no modo de escrita na primeira chamada para apagar o conteúdo existente
@@ -60,7 +60,7 @@ void imprimi_resultado(double t, Matrix matriz_entrada, Matrix y) {
         return;
     }
 
-    fprintf(file, "%lf    [%lf    %lf]    [%lf    %lf    %lf]\n", t, matriz_entrada.matriz[0][0], matriz_entrada.matriz[1][0], y.matriz[0][0], y.matriz[1][0], y.matriz[2][0]);
+    fprintf(file, "%lf    [%lf    %lf]    [%lf    %lf    %lf]\n", t, matriz_u.matriz[0][0], matriz_u.matriz[1][0], y.matriz[0][0], y.matriz[1][0], y.matriz[2][0]);
 
     fclose(file);
 

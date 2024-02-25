@@ -1,4 +1,7 @@
 .vscode/
 program 
-program.exe
+*.exe
 *.o
+makefile
+build/
+```
