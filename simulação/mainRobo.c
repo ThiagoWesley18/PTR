@@ -4,7 +4,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include "simulacaoLib.h"
-#define intervalo 0.01
+#define intervalo 0.1
 #define tempo_inicio 0.0
 #define tempo 20.0
 #define D 1.0

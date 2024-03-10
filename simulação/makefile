@@ -1,6 +1,6 @@
 # Variáveis
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c17 -D _POSIX_C_SOURCE=199309L -pthread
+CFLAGS = -Wall -Wextra -std=c17 -D _POSIX_C_SOURCE=199309L -pthread -lm
 DEPS = ../LIB_ADT/*.h *.h
 SRC = $(wildcard *.c ../LIB_ADT/*.c)
 OBJ = $(SRC:.c=.o)
@@ -11,11 +11,11 @@ all: $(EXEC)
 
 # Regra para o arquivo objeto
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS) -fno-stack-protector
+	$(CC) -c -o $@ $< $(CFLAGS) 
 
 # Regra para o executável
 $(EXEC): $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS) -fno-stack-protector -lm
+	$(CC) -o $@ $^ $(CFLAGS) 
 
 # Regra para limpar os arquivos gerados
 clean:
