@@ -5,7 +5,7 @@
 #include <semaphore.h>
 #include "simulacaoLib.h"
 #define intervalo 0.1
-#define tempo_inicio 0.0
+#define tempo_inicio 0.00
 #define tempo 20.0
 #define D 1.0
 
@@ -108,7 +108,7 @@ int main(){
     sem_destroy(&sem_produtor);
     sem_destroy(&sem_consumidor);
 
-    //freeMatrix(matriz_estado_B, matriz_estado_C, matriz_estado_X, matriz_u, NULL);
+    freeMatrix(matriz_estado_B, matriz_estado_C, matriz_estado_X, matriz_u, NULL);
 
     return 0;
 }
