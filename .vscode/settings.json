@@ -4,7 +4,8 @@
     "*.pl": "prolog",
     "pthread.h": "c",
     "stdlib.h": "c",
-    "math.h": "c"
+    "math.h": "c",
+    "simulacaolib.h": "c"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "gcc",
