@@ -3,6 +3,7 @@
 #include <math.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <sys/time.h>
 #include "simulacaoLib.h"
 #define intervalo 0.1
 #define tempo_inicio 0.00
@@ -115,6 +116,10 @@ void inicializa_Matriz(){
 }
 
 int main(){
+    struct timeval start, end;
+
+    gettimeofday(&start, NULL);
+
     pthread_t t1;
     pthread_t t2;
     pthread_t thread_tempo;
@@ -132,11 +137,15 @@ int main(){
     sem_post(&sem_saida); 
     pthread_join(thread_tempo, NULL);
 
+    gettimeofday(&end, NULL);
+
+    long seconds = (end.tv_sec - start.tv_sec);
+    long micros = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
+
+    printf("Tempo de execução: %ld ms\n", micros/1000);
+
     sem_destroy(&sem_produtor);
     sem_destroy(&sem_consumidor);
     sem_destroy(&sem_saida);
-
-    //freeMatrix(matriz_estado_B, matriz_estado_C, matriz_estado_X, matriz_u, NULL);
-
     return 0;
 }
