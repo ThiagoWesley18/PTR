@@ -124,11 +124,18 @@ int main(){
     pthread_t t2;
     pthread_t thread_tempo;
 
+    pthread_attr_t attr;
+    struct sched_param param;
+    pthread_attr_init(&attr);
+    pthread_attr_setschedpolicy(&attr, SCHED_RR);
+    param.sched_priority = sched_get_priority_max(SCHED_RR);
+    pthread_attr_setschedparam(&attr, &param);
+
     inicializa_Matriz();
 
     pthread_create(&thread_tempo, NULL, thread_Saida, NULL ); 
-    pthread_create(&t1, NULL, thread_Produtora, NULL ); 
-    pthread_create(&t2, NULL, thread_Consumidora, NULL );
+    pthread_create(&t1, &attr, thread_Produtora, NULL ); 
+    pthread_create(&t2, &attr, thread_Consumidora, NULL );
     
     
     pthread_join(t1, NULL);
