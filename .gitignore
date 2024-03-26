@@ -1,7 +1,9 @@
 .vscode/
 program 
 *.exe
+*.out
 *.o
-makefile
+*.obj
+*.txt
 
 ```
