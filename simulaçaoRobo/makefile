@@ -19,4 +19,4 @@ $(EXEC): $(OBJ)
 
 # Regra para limpar os arquivos gerados
 clean:
-	del /f mainRobo.o simulacaoAPI.o ..\LIB_ADT\DstringAPI.o ..\LIB_ADT\IntegralAPI.o ..\LIB_ADT\MatrixAPI.o program
+	rm -f mainRobo.o simulacaoAPI.o ../LIB_ADT/DstringAPI.o ../LIB_ADT/IntegralAPI.o ../LIB_ADT/MatrixAPI.o program

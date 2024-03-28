@@ -31,6 +31,11 @@ Array calcula_sinal_de_entrada(double t){
     return v;
 }
 
+void  integral_matriz_X(Matrix matriz_estado_X){
+    matriz_estado_X.matriz[0][0] = cos(matriz_estado_X.matriz[0][0]);
+    matriz_estado_X.matriz[1][0] = -1*sin(matriz_estado_X.matriz[0][0]);
+    matriz_estado_X.matriz[2][0] = 0;
+}
 void atualiza_matriz_B(Matrix matriz_estado_B, Matrix matriz_estado_X){
 
     matriz_estado_B.matriz[0][0] = sin(matriz_estado_X.matriz[2][0]);
