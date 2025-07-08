@@ -1,0 +1,21 @@
+# Ignore IDE-specific files
+.idea/
+.vscode/
+
+venv/
+obj/
+
+# Ignorar arquivos CSV grandes
+*.csv
+
+
+
+# Arquivos de dados grandes
+*.dat
+*.bin
+*.zip
+*.tar.gz
+
+# Arquivos temporários
+*.tmp
+*~
