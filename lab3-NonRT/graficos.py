@@ -7,42 +7,41 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(current_dir, 'arqSaida.csv')
 
 robo = pd.read_csv(file_path)
-print(robo.columns)
 
 T = []
 for i in range(1, len(robo['t'])):
     T.append(robo['t'][i] - robo['t'][i-1])
 
-print("Periodo: " + str(len(T)))
-
+print("Total: ", sum(T), "s")
 T = pd.DataFrame(T)
 
 # media 
 Tmedia = np.mean(T)
-print("Media: " + str(Tmedia))
+print("Media: ", Tmedia * 1000, "ms")
 
 # variância
-print("Variancia: " + str(np.var(T, axis=0).item()))
+print("Variancia: ", np.var(T, axis=0).item() * 1000, "ms")
 
 # desvio padrão
-print("Desvio padrão: " + str(np.std(T, axis=0).item()))
+print("Desvio padrão: ", np.std(T, axis=0).item() * 1000, "ms")
 
 # maximo
-print("Maximo: " + str(np.max(T)))
+print("Maximo: ", np.max(T) * 1000, "ms")
 
 # minimo
-print("Minimo: " + str(np.min(T)))
+print("Minimo: ", np.min(T) * 1000, "ms")
 
 # jiter
 Delta_T = T - Tmedia
 Jitter = np.mean(np.abs(Delta_T))
-print("Jitter: " + str(Jitter))
+print("Jitter: ", Jitter * 1000, "ms")
 
 
 # Gráficos sobrepostos na mesma figura
 plt.figure(figsize=(12, 8))
-plt.plot(robo['xref'], robo['yref'], label='Referência', color='b')
-plt.plot(robo['x1'], robo['x2'], label='Trajetória Real', color='r')
+#plt.plot(robo['t'], robo['xref'], label='Referência Xref', color='b')
+#plt.plot(robo['t'], robo['yref'], label='Trajetória Yref', color='r')
+#plt.plot(robo['t'], robo['x2'], label='Trajetória Y', color='r')
 
 plt.title('Comparação entre Trajetória de Referência')
 plt.xlabel('Posição X')

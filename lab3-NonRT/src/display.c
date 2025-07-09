@@ -31,7 +31,7 @@ void *display_print(void *arg) {
 
         printf("%f,%f,%f,%f,%f,%f\n", t, y1, y2, teta, xref, yref);
 
-        struct timespec req = {.tv_sec = 0, .tv_nsec = 30000000};
+        struct timespec req = {.tv_sec = 0, .tv_nsec = 600000000};
         nanosleep(&req, NULL);
     }
     return NULL;
