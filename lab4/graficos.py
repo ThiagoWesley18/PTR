@@ -3,6 +3,56 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
+# -----#
+from multiprocessing import shared_memory
+import time
+
+# Nome da memória compartilhada (sem o "/")
+SHM_NAME = "my_buffer"
+BUFFER_SIZE = 128  # Deve ser igual ao MAX_STR_SIZE no C
+
+# Conecta à memória compartilhada existente
+shm = shared_memory.SharedMemory(name=SHM_NAME)
+
+# DataFrame onde vamos armazenar os dados
+df = pd.DataFrame(columns=["t", "y1", "y2", "teta", "xref", "yref"])
+
+# Para verificar repetição
+ultima_linha = ""
+
+print("Aguardando dados na memória compartilhada...\n")
+
+try:
+    while True:
+        # Lê a string da memória compartilhada
+        raw_bytes = shm.buf[:BUFFER_SIZE]
+        linha = raw_bytes.split(b'\x00', 1)[0].decode('utf-8').strip()
+
+        # Encerra se o valor for "-1"
+        if linha == "-1":
+            print("Encerrando leitura (sinal -1 recebido).")
+            break
+
+        # Adiciona no DataFrame se for diferente da última
+        if linha and linha != ultima_linha:
+            try:
+                valores = list(map(float, linha.split(",")))
+                if len(valores) == 6:
+                    df.loc[len(df)] = valores
+                    ultima_linha = linha
+            except ValueError:
+                pass  # Ignora linhas mal formatadas
+
+        time.sleep(0.1)  # Evita leitura muito intensa
+
+finally:
+    shm.close()
+
+# Exibe resultado final
+print("\nDataFrame final:")
+print(df)
+#---------#
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 file_path = os.path.join(current_dir, 'arqSaida.csv')
 
