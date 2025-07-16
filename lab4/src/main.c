@@ -15,6 +15,8 @@
 //int main(int argc, char *argv[])
 int main()
 {
+    clock_t t;
+    t = clock();
 	printf("t,x1,x2,teta,xref,yref\n");
     pthread_t controle_thr;
     pthread_t linearizaçao_thr;
@@ -34,12 +36,10 @@ int main()
     monitoRef_init(args.ref);
     monitoSaida_init(args.saida);
     
+    
+    
+    
     pthread_create(&display_thr, NULL, display_print, &args);
-
-    clock_t t;
-    t = clock();
-
-
     pthread_create(&referencia_thr, NULL, uthread, &args);
     pthread_create(&direçao_thr, NULL, dir, &args);
     pthread_create(&controle_thr, NULL, controle, &args);
@@ -52,13 +52,14 @@ int main()
     pthread_join(linearizaçao_thr, NULL);
     pthread_join(controle_thr, NULL);
     
-    t = clock() - t;
-
-    pthread_join(display_thr, NULL);
-
+    
+    
     printf("Tempo de execucao: %f segundos\n", ((double)t) / CLOCKS_PER_SEC);
     monitoRef_destroy(args.ref);
     monitoSaida_destroy(args.saida);
-
+    
+    pthread_join(display_thr, NULL);
+    t = clock() - t;
     return EXIT_SUCCESS;
 }
+
