@@ -26,6 +26,8 @@ int main()
     pthread_t direçao_thr;
     pthread_t referencia_thr;
     pthread_t display_thr;
+    struct timespec start, end;
+    double elapsed_time;
     
     int fd = shm_open(SHM_NAME, O_CREAT | O_RDWR, 0666);
     if (ftruncate(fd, sizeof(BufferCompartilhado)) == -1) {
@@ -46,8 +48,6 @@ int main()
     monitoRef_init(args.ref);
     monitoSaida_init(args.saida);
     
-    struct timespec start, end;
-    double elapsed_time;
 
     pthread_create(&display_thr, NULL, display_print, &args);
 
