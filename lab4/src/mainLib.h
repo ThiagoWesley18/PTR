@@ -7,6 +7,7 @@
 typedef struct {
     void *ref;
     void *saida;
+    void *buffer; 
 } thread_args_t;
 
 

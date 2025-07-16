@@ -3,45 +3,95 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-file_path = os.path.join(current_dir, 'arqSaida.csv')
+# -----#
+from multiprocessing import shared_memory
+import time
 
-robo = pd.read_csv(file_path)
+# Nome da memória compartilhada (sem o "/")
+SHM_NAME = "buffer"
+BUFFER_SIZE = 256 # Deve ser igual ao MAX_STR_SIZE no C
 
-T = []
-for i in range(1, len(robo['t'])):
-    T.append(robo['t'][i] - robo['t'][i-1])
+# Conecta à memória compartilhada existente
+shm = shared_memory.SharedMemory(name=SHM_NAME)
 
-print("Total: ", sum(T), "s")
-T = pd.DataFrame(T)
+# DataFrame onde vamos armazenar os dados
+robo = pd.DataFrame(columns=["t", "y1", "y2", "teta", "xref", "yref"])
 
-# media 
-Tmedia = np.mean(T)
-print("Media: ", Tmedia * 1000, "ms")
+# Para verificar repetição
+ultima_linha = ""
 
-# variância
-print("Variancia: ", np.var(T, axis=0).item() * 1000, "ms")
+print("Lendo dados da Memória Compartilhada...\n")
 
-# desvio padrão
-print("Desvio padrão: ", np.std(T, axis=0).item() * 1000, "ms")
+try:
+    while True:
+        # Lê a string da memória compartilhada
+        raw_bytes = bytes(shm.buf[:BUFFER_SIZE])  # Converte memoryview para bytes
+        linha = raw_bytes.split(b'\x00', 1)[0].decode('utf-8').strip()
 
-# maximo
-print("Maximo: ", np.max(T) * 1000, "ms")
+        # Encerra se o valor for "-1"
+        if linha == "-1":
+            print("Plotando Grafico...")
+            break
 
-# minimo
-print("Minimo: ", np.min(T) * 1000, "ms")
+        # Adiciona no DataFrame se for diferente da última
+        if linha and linha != ultima_linha:
+            # Exibe a linha lida
+            try:
+                valores = list(map(float, linha.split(",")))
+                if len(valores) == 6:
+                    robo .loc[len(robo )] = valores
+                    ultima_linha = linha
+            except ValueError:
+                pass  # Ignora linhas mal formatadas
+        
+        # Aguarda um pouco antes de ler novamente
+        time.sleep(0.600)
 
-# jiter
-Delta_T = T - Tmedia
-Jitter = np.mean(np.abs(Delta_T))
-print("Jitter: ", Jitter * 1000, "ms")
+finally:
+    # Fecha o acesso à memória compartilhada
+    try:
+        shm.close()
+    except BufferError:
+        print("Erro ao fechar a memória compartilhada. Certifique-se de que não há referências pendentes.")
+    # Libera a memória compartilhada (desvincula)
+    try:
+        shm.unlink()
+    except FileNotFoundError:
+        print("Memória compartilhada já foi desvinculada.")
+        
 
+## Converte todos os dados do DataFrame para valores numéricos
+#T = pd.Series(robo['t'].diff().dropna())
+#
+## Total
+#print("Total: ", T.sum(), "s")
+#
+## Média
+#Tmedia = T.mean()
+#print("Média: ", Tmedia * 1000, "ms")
+#
+## Variância
+#print("Variância: ", T.var() * 1000, "ms")
+#
+## Desvio padrão
+#print("Desvio padrão: ", T.std() * 1000, "ms")
+#
+## Máximo
+#print("Máximo: ", T.max() * 1000, "ms")
+#
+## Mínimo
+#print("Mínimo: ", T.min() * 1000, "ms")
+#
+## Jitter
+#Delta_T = T - Tmedia
+#Jitter = Delta_T.abs().mean()
+#print("Jitter: ", Jitter * 1000, "ms")
 
 # Gráficos sobrepostos na mesma figura
 plt.figure(figsize=(12, 8))
-#plt.plot(robo['t'], robo['xref'], label='Referência Xref', color='b')
-#plt.plot(robo['t'], robo['yref'], label='Trajetória Yref', color='r')
-#plt.plot(robo['t'], robo['x2'], label='Trajetória Y', color='r')
+plt.plot(robo ['t'], robo ['xref'], label='Referência Xref', color='b')
+plt.plot(robo ['t'], robo ['yref'], label='Trajetória Yref', color='r')
+#plt.plot(T['t'], T['x2'], label='Trajetória Y', color='r')
 
 plt.title('Comparação entre Trajetória de Referência')
 plt.xlabel('Posição X')
